@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AKDFACTVAULT Toolkit</title>
+<style>
+:root{--bg:#e3f3ff;--card:#fff;--tx:#0a2540;--mu:#52708a;--p:#2fb1ff;--pd:#0a7fd4;--bd:#cde7f8;--glow:#bfe5ff;--g:linear-gradient(135deg,#5ccaff,#1a96ee);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#07162a;--card:#0e2742;--tx:#e6f4ff;--mu:#9bb8cc;--p:#3dbaff;--pd:#5cc4ff;--bd:#1b4468;--glow:#0f3a63;--g:linear-gradient(135deg,#2ea8f5,#1272c9)}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif;padding:14px}
+h1{margin:0 0 2px;font-size:22px;color:var(--pd)}.sub{color:var(--mu);font-size:13px;margin-bottom:12px}
+nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px}
+nav button{white-space:nowrap;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 12px;border-radius:20px;font-size:14px}
+nav button.on{background:var(--p);color:#04263d;border-color:var(--p);font-weight:600}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-top:8px}
+input,textarea,select{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font-size:15px;margin:4px 0}
+textarea{min-height:200px}label{font-size:13px;color:var(--mu)}
+.btn{background:var(--p);color:#04263d;border:0;padding:10px 14px;border-radius:10px;font-weight:600;font-size:15px;margin:4px 4px 4px 0}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}
+.item{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd);font-size:14px}
+.item span{flex:1;word-break:break-word}.item input[type=checkbox]{width:20px;flex:none}
+.x{background:none;border:0;color:var(--mu);font-size:18px}
+.big{font-size:42px;font-weight:700;color:var(--pd)}.tip{font-size:13px;color:var(--mu);margin:2px 0}
+canvas,#out{max-width:100%;border-radius:10px;border:1px solid var(--bd)}
+.hide{display:none}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:290px;max-width:85%;background:var(--card);border-left:1px solid var(--bd);padding:calc(16px + env(safe-area-inset-top,0px)) 14px 14px;transform:translateX(105%);transition:transform .25s;z-index:20;overflow-y:auto}
+#drawer.open{transform:none}
+.shade{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:19;display:none}.shade.on{display:block}
+.seg{display:flex;gap:6px}.seg .btn{flex:1;margin:4px 0}.btn.off{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}
+.msg{color:#d6336c;font-size:13px;min-height:18px}
+#pbox{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.95);opacity:0;pointer-events:none;transition:.2s;width:min(92vw,380px);max-height:85vh;overflow:auto;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;z-index:21}
+#pbox.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.plan{border:1px solid var(--bd);border-radius:12px;padding:12px;margin:8px 0}.plan.cur{border-color:var(--p);background:var(--bg)}.plan b{font-size:17px}.plan .pr{color:var(--pd);font-weight:700;font-size:20px}
+.btn:disabled{opacity:.5}
+body{background:var(--bg) radial-gradient(900px 380px at 50% -60px,var(--glow),transparent) no-repeat}
+h1{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{box-shadow:0 6px 18px rgba(20,120,200,.12)}
+.btn{background:var(--g);color:#fff;box-shadow:0 3px 8px rgba(20,140,230,.3)}
+.btn.off{background:var(--card);color:var(--tx);box-shadow:none}
+nav button.on{background:var(--g);color:#fff}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--p)}
+.sec{font-size:18px;font-weight:700;color:var(--pd);margin-bottom:2px}
+#aiout{width:100%;border-radius:10px;border:1px solid var(--bd);margin-top:8px}#aiout:not([src]){display:none}
+h1{background:linear-gradient(90deg,#1a96ee,#7c3aed,#db2777);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav button{border-bottom-width:3px}
+nav button:nth-child(1){border-bottom-color:#2fb1ff}nav button:nth-child(2){border-bottom-color:#14b8a6}nav button:nth-child(3){border-bottom-color:#22c55e}nav button:nth-child(4){border-bottom-color:#f59e0b}nav button:nth-child(5){border-bottom-color:#8b5cf6}nav button:nth-child(6){border-bottom-color:#ec4899}
+nav button:nth-child(2).on{background:linear-gradient(135deg,#2dd4bf,#0d9488)}nav button:nth-child(3).on{background:linear-gradient(135deg,#4ade80,#16a34a)}nav button:nth-child(4).on{background:linear-gradient(135deg,#fbbf24,#f97316)}nav button:nth-child(5).on{background:linear-gradient(135deg,#a78bfa,#7c3aed)}nav button:nth-child(6).on{background:linear-gradient(135deg,#f472b6,#db2777)}
+#s0{border-top:4px solid #2fb1ff}#s1{border-top:4px solid #14b8a6}#s2{border-top:4px solid #22c55e}#s3{border-top:4px solid #f59e0b}#s4{border-top:4px solid #8b5cf6}#s5{border-top:4px solid #ec4899}
+#s1 .btn:not(.off){background:linear-gradient(135deg,#2dd4bf,#0d9488)}#s2 .btn:not(.off){background:linear-gradient(135deg,#4ade80,#16a34a)}#s3 .btn:not(.off){background:linear-gradient(135deg,#fbbf24,#f97316)}#s4 .btn:not(.off){background:linear-gradient(135deg,#a78bfa,#7c3aed)}#s5 .btn:not(.off){background:linear-gradient(135deg,#f472b6,#db2777)}
+#s1 .sec,#s4 .sec{color:#7c3aed}#s5 .sec{color:#db2777}.big{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+#pl2 .plan{border-left:5px solid #8b5cf6}#pl2 .plan.cur{border-color:#22c55e;background:var(--bg)}
+</style></head><body>
+<div class="top"><div><h1>AKDFACTVAULT Toolkit</h1><div class="sub">Creator toolkit: script, planner, fact-check, title, 3D image aur thumbnail</div></div><div style="display:flex;gap:6px"><button class="btn off" onclick="pmo(1)" aria-label="Menu" style="font-size:20px;padding:6px 12px">⋮</button><button class="btn" id="acb" onclick="drw(1)">👤 Account</button></div></div>
+<div id="shade" class="shade" onclick="drw(0)"></div>
+<div id="pshade" class="shade" onclick="pmo(0)"></div>
+<div id="pbox"><div class="row"><b style="color:var(--pd);font-size:18px">Upgrade</b><button class="x" style="text-align:right" onclick="pmo(0)">✕</button></div>
+<div class="tip">Upgrade karne se image download ki quality badhti hai.</div><div id="pl2"></div>
+<div class="tip">Demo: abhi asli payment nahi hota, koi card detail mat daalo. Plan sirf tumhare browser me save hota hai.</div></div>
+<aside id="drawer">
+<div class="row"><b style="color:var(--pd)">Account</b><button class="x" style="text-align:right" onclick="drw(0)">✕</button></div>
+<div id="fm"><div class="seg"><button class="btn" id="ain" onclick="am('in')">Sign in</button><button class="btn off" id="aup" onclick="am('up')">Sign up</button></div>
+<div id="nmw" class="hide"><label>Naam</label><input id="nm" autocomplete="name"></div>
+<label>Email</label><input id="em" type="email" autocomplete="email">
+<label>Password (min 6)</label><input id="pw" type="password" autocomplete="current-password">
+<div class="msg" id="ams"></div>
+<button class="btn" id="ago" onclick="ago()" style="width:100%">Sign in</button>
+<div class="tip">Ye account sirf tumhare isi browser me save hota hai (demo). Apna asli ya zaroori password mat daalo.</div></div>
+<div id="who" class="hide"><div class="big" style="font-size:26px" id="wn"></div><div class="tip" id="we"></div><button class="btn off" onclick="signout()">Sign out</button></div>
+</aside>
+<nav id="nav"></nav>
+
+<section id="s0" class="card">
+<label>Video topic</label><input id="topic" placeholder="Jaise: Black holes">
+<label>Category</label><select id="cat"><option>Science</option><option>Space</option><option>Psychology</option><option>Human Body</option><option>History</option><option>Geography</option><option>Technology</option></select>
+<button class="btn" onclick="gen()">Script banao</button>
+<textarea id="scr" readonly placeholder="Script outline yahan aayega"></textarea>
+<div class="tip">Ye ek structure hai. Facts khud research karke bharo aur Fact-check tab me verify karo.</div>
+</section>
+
+<section id="s1" class="card hide">
+<div class="row"><div><div class="big" id="streak">0</div><div class="tip">din ki streak</div></div><div><div class="big" id="wk">0</div><div class="tip">is hafte done</div></div></div>
+<label>Video idea</label><input id="pt" placeholder="Idea / title">
+<input id="pd" type="date"><button class="btn" onclick="addP()">Add karo</button>
+<div id="pl"></div>
+</section>
+
+<section id="s2" class="card hide">
+<label>Claim (fact)</label><input id="fc" placeholder="Jaise: Sun ka 99.86% mass solar system me hai">
+<label>Source (link ya book ka naam)</label><input id="fs" placeholder="NASA, britannica.com...">
+<button class="btn" onclick="addF()">Add karo</button>
+<div class="tip" id="fsum"></div><div id="fl"></div>
+</section>
+
+<section id="s3" class="card hide">
+<label>Video title</label><input id="tt" oninput="score()" placeholder="Title likho">
+<div class="row"><div class="big" id="sc">0</div><div class="tip" id="scl">/100</div></div>
+<div id="tips"></div>
+</section>
+
+<section id="s4" class="card hide">
+<div class="sec">✨ 3D Image</div><div class="tip">Text likho, AI uski 3D image banata hai (20-60 sec).</div>
+<label>Image ka size</label><select id="ar"><option value="16:9">16:9 (wide)</option><option value="1:1">1:1 (square)</option><option value="9:16">9:16 (vertical)</option></select>
+<label>Kaisi image chahiye?</label>
+<textarea id="ai" style="min-height:80px" placeholder="Jaise: Raat me chaand ke neeche ek rocket, ya sirf ek naam: Rahul"></textarea>
+<button class="btn" id="aib" onclick="aiGen()">✨ 3D image banao</button><button class="btn off" onclick="if(actl)actl.abort()">Stop</button>
+<div class="tip" id="aim">Har baar dabane par nayi variation banti hai. Download dabate hi image seedha phone/PC me save hoti hai.</div>
+<button class="btn" onclick="dlAI()">⬇ Download image</button>
+<div class="tip" id="aid"></div>
+<img id="aiout" alt="">
+</section>
+
+<section id="s5" class="card hide">
+<div class="sec">🖼 Thumbnail maker</div><div class="tip">Sirf YouTube thumbnail (1280x720) ke liye. Topic likho aur thumbnail banao.</div>
+<label>Topic ya text likho, thumbnail ban jayega</label>
+<input id="it" placeholder="Jaise: Black hole ka raaz">
+
+<button class="btn" id="tb" onclick="mk()">Thumbnail banao</button>
+<div class="tip" id="tm">AI se 3D thumbnail banta hai (20-60 sec). Neeche sliders se edit kar sakte ho.</div>
+<input type="file" id="f" accept="image/*" class="hide">
+<canvas id="cv" width="1280" height="720"></canvas>
+<label>Brightness</label><input type="range" id="br" min="50" max="160" value="100">
+<label>Contrast</label><input type="range" id="co" min="50" max="170" value="100">
+<label>Saturation</label><input type="range" id="sa" min="0" max="250" value="100">
+<label>Text (thumbnail)</label><input id="tx" placeholder="Thumbnail text">
+<div class="row"><div><label>Text size</label><input type="range" id="ts" min="30" max="200" value="90"></div>
+<div><label>Upar-neeche</label><input type="range" id="ty" min="5" max="95" value="85"></div></div>
+<div class="row"><div><label>Text colour</label><input type="color" id="tc" value="#ffffff"></div>
+<div><label>Blur background</label><input type="range" id="bl" min="0" max="12" value="0"></div></div>
+<button class="btn off" onclick="finish()">Preview</button><button class="btn" onclick="dl()">⬇ Download thumbnail</button>
+<div class="tip" id="dlm"></div>
+<div class="tip">Neeche image par long-press (mobile) ya right-click (PC) karke save karo. Size 1280x720.</div>
+<img id="out" alt="">
+</section>
+
+<script>
+var tabs=["Script","Planner","Fact-check","Title score","3D Image","Thumbnail"];
+var nav=document.getElementById("nav");
+tabs.forEach(function(t,i){var b=document.createElement("button");b.textContent=t;b.onclick=function(){show(i)};nav.appendChild(b)});
+function show(n){tabs.forEach(function(_,i){document.getElementById("s"+i).classList.toggle("hide",i!==n);nav.children[i].classList.toggle("on",i===n)});try{localStorage.setItem("akd_tab",n)}catch(e){}}
+function ld(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function $(i){return document.getElementById(i)}
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+
+/* Script */
+function gen(){var t=$("topic").value.trim();if(!t){$("scr").value="Pehle topic likho.";return}
+var c=$("cat").value;
+$("scr").value="TITLE IDEAS\n1. "+t+": Jo Kisi Ne Aapko Nahi Bataya\n2. 5 Hairaan Karne Wale Facts About "+t+"\n3. "+t+" Ka Sach Jaankar Hosh Udd Jayenge\n\n"+
+"HOOK (0-5 sec)\nEk shocking sawal ya fact se shuru karo. Jaise: Kya aap jaante hain "+t+" ke baare me ye baat?\n\n"+
+"INTRO (5-20 sec)\nBatao is video me kya milega ("+c+" ke 5 facts) aur end tak rukne ki wajah: sabse crazy fact last me.\n\n"+
+"FACT 1 (small, easy)\nFACT 2 (interesting)\nFACT 3 (surprising)\nFACT 4 (mind-blowing)\n\nTWIST / FACT 5\nSabse bada surprise yahan rakho.\n\n"+
+"RETENTION TIPS\n- Har 15-20 sec me visual ya zoom change karo\n- Har fact ke baad ek mini cliffhanger\n\nCTA (last 10 sec)\nLike, subscribe aur comment me poochho: Aapko kaunsa fact sabse zyada pasand aaya?"}
+
+/* Planner */
+var P=ld("akd_p");$("pd").value=new Date().toISOString().slice(0,10);
+function addP(){var t=$("pt").value.trim();if(!t)return;P.push({t:t,d:$("pd").value,done:null});$("pt").value="";sv("akd_p",P);rP()}
+function dk(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function rP(){P.sort(function(a,b){return a.d<b.d?-1:1});
+var h="";P.forEach(function(p,i){h+='<div class="item"><input type="checkbox" '+(p.done?"checked":"")+' onchange="tgP('+i+')"><span>'+esc(p.t)+' <small>('+esc(p.d||"")+')</small></span><button class="x" onclick="dlP('+i+')">×</button></div>'});
+$("pl").innerHTML=h||'<div class="tip">Abhi koi idea nahi.</div>';
+var set={};P.forEach(function(p){if(p.done)set[p.done]=1});
+var d=new Date(),s=0;if(!set[dk(d)])d.setDate(d.getDate()-1);
+while(set[dk(d)]){s++;d.setDate(d.getDate()-1)}
+$("streak").textContent=s;
+var now=new Date(),mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));var ms=dk(mon),w=0;
+P.forEach(function(p){if(p.done&&p.done>=ms)w++});$("wk").textContent=w}
+function tgP(i){P[i].done=P[i].done?null:dk(new Date());sv("akd_p",P);rP()}
+function dlP(i){P.splice(i,1);sv("akd_p",P);rP()}
+
+/* Fact-check */
+var F=ld("akd_f");
+function addF(){var c=$("fc").value.trim();if(!c)return;F.push({c:c,s:$("fs").value.trim(),v:false});$("fc").value="";$("fs").value="";sv("akd_f",F);rF()}
+function rF(){var h="",n=0;F.forEach(function(f,i){if(f.v)n++;h+='<div class="item"><input type="checkbox" '+(f.v?"checked":"")+' onchange="tgF('+i+')"><span>'+esc(f.c)+'<br><small>Source: '+esc(f.s||"nahi diya")+'</small></span><button class="x" onclick="dlF('+i+')">×</button></div>'});
+$("fl").innerHTML=h;$("fsum").textContent=F.length?n+" / "+F.length+" facts verified. Kam se kam 2 sources se check karo.":""}
+function tgF(i){F[i].v=!F[i].v;sv("akd_f",F);rF()}
+function dlF(i){F.splice(i,1);sv("akd_f",F);rF()}
+
+/* Title score */
+function score(){var t=$("tt").value.trim(),s=0,tp=[];if(!t){$("sc").textContent=0;$("tips").innerHTML="";return}
+var L=t.length;if(L>=40&&L<=60)s+=25;else{s+=10;tp.push("Length 40-60 characters rakho (abhi "+L+").")}
+if(/\d/.test(t))s+=15;else tp.push("Number add karo (5 facts, 99%...).");
+if(/(shocking|secret|truth|hidden|crazy|never|mystery|sach|raaz|hairaan|ajeeb|nahi)/i.test(t))s+=20;else tp.push("Curiosity word use karo (secret, truth, sach, raaz).");
+if(/\?|:/.test(t))s+=10;else tp.push("Sawal ya colon (:) se curiosity banao.");
+if(t.split(/\s+/).length<=9)s+=15;else tp.push("Title chhota rakho, 9 words se kam.");
+if(t!==t.toUpperCase()||L<8)s+=15;else tp.push("Poora CAPS me mat likho.");
+$("sc").textContent=s;$("scl").textContent="/100 "+(s>=80?"Strong":s>=60?"Achha":"Improve karo");
+$("tips").innerHTML=tp.map(function(x){return'<div class="tip">• '+esc(x)+'</div>'}).join("")}
+
+/* Image tool */
+var img=null,cv=$("cv"),cx=cv.getContext("2d");
+$("f").onchange=function(e){var fl=e.target.files[0];if(!fl)return;var r=new FileReader();r.onload=function(){var i=new Image();i.onload=function(){img=i;draw()};i.src=r.result};r.readAsDataURL(fl)};
+["br","co","sa","tx","ts","ty","tc","bl"].forEach(function(i){$(i).oninput=draw});
+function draw(){cx.clearRect(0,0,1280,720);cx.fillStyle="#38b6ff";cx.fillRect(0,0,1280,720);
+if(img){var r=Math.max(1280/img.width,720/img.height),w=img.width*r,h=img.height*r;
+cx.filter="brightness("+$("br").value+"%) contrast("+$("co").value+"%) saturate("+$("sa").value+"%) blur("+$("bl").value+"px)";
+cx.drawImage(img,(1280-w)/2,(720-h)/2,w,h);cx.filter="none"}
+var t=$("tx").value;if(t){var sz=+$("ts").value;cx.font="900 "+sz+"px Impact,Arial Black,sans-serif";cx.textAlign="center";cx.textBaseline="middle";
+cx.lineWidth=sz/6;cx.strokeStyle="#000";cx.lineJoin="round";var y=720*$("ty").value/100;cx.strokeText(t,640,y,1200);cx.fillStyle=$("tc").value;cx.fillText(t,640,y,1200)}}
+function finish(){draw();try{$("out").src=cv.toDataURL("image/png")}catch(e){}}
+/* Topic to image */
+var TH={space:["#0b1026","#5b2a86","🚀",/space|planet|star|galaxy|black hole|moon|mars|sun|universe|nasa|अंतरिक्ष|ग्रह|तारा|चाँद|चांद/i],science:["#053b50","#1fa2a6","🔬",/science|atom|chemi|physic|energy|lab|विज्ञान/i],psych:["#2b1055","#d53369","🧠",/psycholog|mind|brain|emotion|dream|मन|दिमाग|मनोविज्ञान/i],body:["#7a0f2b","#ff6a6a","🫀",/body|heart|blood|bone|organ|health|शरीर|दिल|हड्डी/i],history:["#4a3320","#c99a5b","🏛️",/histor|war|king|empire|ancient|egypt|इतिहास|राजा|युद्ध/i],geo:["#0b4f6c","#3fbf7f","🌍",/geograph|earth|ocean|country|mountain|river|भूगोल|धरती|पृथ्वी|नदी/i],tech:["#0a2540","#38b6ff","💻",/tech|ai|robot|computer|phone|internet|software|तकनीक|कंप्यूटर/i]};
+function rnd(s){return function(){s=(s*1664525+1013904223)%4294967296;return s/4294967296}}
+function mk0(){var t=$("it").value.trim();if(!t){$("it").placeholder="Pehle topic likho!";return}
+var k="";for(var n in TH){if(TH[n][3].test(t)){k=n;break}}
+var th=TH[k]||["#0d8be0","#7fd3ff","✨"];
+var o=document.createElement("canvas");o.width=1280;o.height=720;var c=o.getContext("2d");
+var g=c.createLinearGradient(0,0,1280,720);g.addColorStop(0,th[0]);g.addColorStop(1,th[1]);c.fillStyle=g;c.fillRect(0,0,1280,720);
+var sd=0;for(var i=0;i<t.length;i++)sd=(sd*31+t.charCodeAt(i))%4294967296;var r=rnd(sd+1);
+c.fillStyle="#fff";for(i=0;i<70;i++){c.globalAlpha=.06+r()*.22;c.beginPath();c.arc(r()*1280,r()*720,4+r()*60,0,6.283);c.fill()}
+c.globalAlpha=.95;c.font="280px serif";c.textAlign="center";c.textBaseline="middle";c.fillText(th[2],640,250);c.globalAlpha=1;
+$("br").value=100;$("co").value=100;$("sa").value=100;$("bl").value=0;$("tc").value="#ffffff";
+$("tx").value=t;$("ts").value=t.length>28?64:t.length>16?84:110;$("ty").value=80;
+img=o;finish()}
+
+/* Account (demo, browser only) */
+var amode="in";
+function drw(o){$("drawer").classList.toggle("open",!!o);$("shade").classList.toggle("on",!!o)}
+function am(m){amode=m;$("nmw").classList.toggle("hide",m==="in");$("ain").classList.toggle("off",m!=="in");$("aup").classList.toggle("off",m!=="up");$("ago").textContent=m==="in"?"Sign in":"Sign up";$("ams").textContent=""}
+function ldo(k){try{return JSON.parse(localStorage.getItem(k))||{}}catch(e){return{}}}
+async function hs(s){try{var b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")}catch(e){return btoa(unescape(encodeURIComponent(s)))}}
+async function ago(){var e=$("em").value.trim().toLowerCase(),p=$("pw").value,n=$("nm").value.trim(),U=ldo("akd_u"),m=$("ams");
+if(!/^\S+@\S+\.\S+$/.test(e)){m.textContent="Sahi email likho.";return}
+if(p.length<6){m.textContent="Password kam se kam 6 characters ka rakho.";return}
+var h=await hs(p);
+if(amode==="up"){if(!n){m.textContent="Naam likho.";return}if(U[e]){m.textContent="Ye email pehle se registered hai. Sign in karo.";return}U[e]={n:n,h:h};try{localStorage.setItem("akd_u",JSON.stringify(U))}catch(x){}ses(e,n)}
+else{if(!U[e]||U[e].h!==h){m.textContent="Email ya password galat hai.";return}ses(e,U[e].n)}}
+function ses(e,n){try{localStorage.setItem("akd_s",JSON.stringify({e:e,n:n}))}catch(x){}ru()}
+function ru(){var s=null;try{s=JSON.parse(localStorage.getItem("akd_s"))}catch(x){}
+$("fm").classList.toggle("hide",!!s);$("who").classList.toggle("hide",!s);$("pw").value="";$("ams").textContent="";
+if(s){$("wn").textContent="Hi, "+s.n;$("we").textContent=s.e;$("acb").textContent="👤 "+s.n.split(" ")[0]}else $("acb").textContent="👤 Account"}
+function signout(){try{localStorage.removeItem("akd_s")}catch(x){}ru()}
+
+/* Plans (demo, no real payment) */
+var PL={free:{n:"Free",w:1280,h:720},s:{n:"Starter",pr:"$5",w:1920,h:1080},p:{n:"Pro",pr:"$20",w:2560,h:1440},u:{n:"Ultra",pr:"$25",w:3840,h:2160}};
+function ses0(){try{return JSON.parse(localStorage.getItem("akd_s"))}catch(e){return null}}
+function cur(){var s=ses0();if(!s)return"free";return ldo("akd_pl")[s.e]||"free"}
+function pmo(o){$("pbox").classList.toggle("open",!!o);$("pshade").classList.toggle("on",!!o);if(o)rpl()}
+function rpl(){var s=ses0(),c=cur(),h="";
+if(!s)h+='<div class="tip">Upgrade ke liye pehle Sign up ya Sign in karo.</div><button class="btn" style="width:100%" onclick="pmo(0);drw(1)">Sign up / Sign in</button>';
+["s","p","u"].forEach(function(k){var p=PL[k];h+='<div class="plan'+(c===k?" cur":"")+'"><b>'+p.n+'</b> <span class="pr">'+p.pr+'</span><div class="tip">Image download '+p.w+'x'+p.h+'</div><button class="btn" style="width:100%" '+((!s||c===k)?"disabled":"")+' onclick="upg(\''+k+'\')">'+(c===k?"Current plan":"Upgrade")+'</button></div>'});
+if(s&&c!=="free")h+='<button class="btn off" style="width:100%" onclick="upg(\'free\')">Free plan par wapas</button>';
+$("pl2").innerHTML=h}
+function upg(k){var s=ses0();if(!s)return;var o=ldo("akd_pl");o[s.e]=k;if(k==="free")delete o[s.e];try{localStorage.setItem("akd_pl",JSON.stringify(o))}catch(e){}rpl();upi()}
+function upi(){var s=ses0(),p=PL[cur()];if(s)$("we").textContent=s.e+" · "+p.n+" plan";$("dlm").textContent="Tumhara plan: "+p.n+" · download "+p.w+"x"+p.h;$("aid").textContent="Tumhara plan: "+p.n+" · download quality "+p.w+"px wide"}
+var ru0=ru;ru=function(){ru0();upi()};
+function sv2(cv2,name){cv2.toBlob(async function(b){var d=null;try{d=window.claude?await claude.use("downloads"):null}catch(e){}
+if(d){try{await d.save({filename:name,data:b});return}catch(e){if(e&&e.code==="declined")return}}
+var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},5000)},"image/png")}
+var tv=0,thT="",aiSt=null,aiImg=null,actl=null;
+function hx(h){h=h.replace("#","");return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
+function sh(h,f){return"rgb("+hx(h).map(function(v){return Math.round(f<0?v*(1+f):v+(255-v)*f)})+")"}
+function sh2(h,f){var m=/\d+/g,a=h.match(m);return h}
+function orb(c,x,y,r,col,fl){c.save();c.globalAlpha=.35;c.fillStyle="#000";c.beginPath();c.ellipse(x+r*.2,fl,r*.9,r*.17,0,0,6.283);c.fill();c.restore();
+var g=c.createRadialGradient(x-r*.35,y-r*.4,r*.05,x,y,r);g.addColorStop(0,sh(col,.8));g.addColorStop(.45,col);g.addColorStop(1,sh(col,-.6));c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,6.283);c.fill()}
+function poly(c,p,f){c.fillStyle=f;c.beginPath();c.moveTo(p[0],p[1]);for(var i=2;i<p.length;i+=2)c.lineTo(p[i],p[i+1]);c.closePath();c.fill()}
+function cube(c,x,y,s,col){var w=s*.87;poly(c,[x,y,x+w,y+s*.5,x,y+s,x-w,y+s*.5],sh(col,.4));poly(c,[x-w,y+s*.5,x,y+s,x,y+2*s,x-w,y+1.5*s],col);poly(c,[x+w,y+s*.5,x,y+s,x,y+2*s,x+w,y+1.5*s],sh(col,-.4))}
+function scene(t,W,H,v){var k="",n,i;for(n in TH){if(TH[n][3].test(t)){k=n;break}}
+var th=TH[k]||["#0d8be0","#7fd3ff","✨"],o=document.createElement("canvas");o.width=W;o.height=H;
+var c=o.getContext("2d"),u=Math.min(W,H*16/9)/1280,sd=v*7919;
+for(i=0;i<t.length;i++)sd=(sd*31+t.charCodeAt(i))%4294967296;var r=rnd(sd+1);
+var g=c.createLinearGradient(0,0,W*.6,H);g.addColorStop(0,th[0]);g.addColorStop(1,th[1]);c.fillStyle=g;c.fillRect(0,0,W,H);
+g=c.createRadialGradient(W/2,H*.4,10,W/2,H*.4,W*.6);g.addColorStop(0,"rgba(255,255,255,.35)");g.addColorStop(1,"rgba(255,255,255,0)");c.fillStyle=g;c.fillRect(0,0,W,H);
+var fl=H*.8;g=c.createLinearGradient(0,fl-H*.05,0,H);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.45)");c.fillStyle=g;c.fillRect(0,fl-H*.05,W,H);
+var P=[th[1],"#ffd166","#ff6b9d","#7cf0c8","#ffffff","#b79cff"];
+for(i=0;i<9;i++){var rr=(14+r()*46)*u;orb(c,r()*W,fl-rr-r()*H*.5,rr,P[i%6],fl+r()*H*.08)}
+var s1=64*u;cube(c,W*.14,fl-2*s1,s1,"#ffd166");var s2=76*u;cube(c,W*.86,fl-2*s2,s2,"#ff6b9d");
+var R=250*u,cx=W/2,cy=H*.44;
+c.lineWidth=R*.08;c.strokeStyle="rgba(255,255,255,.6)";c.beginPath();c.ellipse(cx,cy,R*1.55,R*.38,-.25,Math.PI,6.283);c.stroke();
+orb(c,cx,cy,R,sh(th[1],.05),fl);
+c.save();c.font=Math.round(R*1.05)+"px 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif";c.textAlign="center";c.textBaseline="middle";c.shadowColor="rgba(0,0,0,.45)";c.shadowBlur=24*u;c.shadowOffsetY=10*u;c.fillText(th[2],cx,cy+R*.04);c.restore();
+c.beginPath();c.ellipse(cx,cy,R*1.55,R*.38,-.25,0,Math.PI);c.stroke();return o}
+function ext(c,t,x,y,sz,col){c.save();c.font="900 "+sz+"px Impact,Arial Black,sans-serif";c.textAlign="center";c.textBaseline="middle";
+var d=Math.round(sz*.12);for(var i=d;i>0;i--){c.fillStyle=sh(col,-.55);c.fillText(t,x+i*.7,y+i)}
+var g=c.createLinearGradient(0,y-sz/2,0,y+sz/2);g.addColorStop(0,"#ffffff");g.addColorStop(1,sh(col,.2));c.fillStyle=g;c.fillText(t,x,y);c.restore()}
+
+/* Real AI images via free image server; offline 3D as fallback */
+var aiRem=null,thTn=false;
+function cap(w,h,f){var k=Math.min(f,2048/Math.max(w,h));return[Math.round(w*k),Math.round(h*k)]}
+function purl(p,w,h){return"https://image.pollinations.ai/prompt/"+encodeURIComponent(p)+"?width="+w+"&height="+h+"&seed="+Math.floor(Math.random()*1e6)+"&nologo=true&model=flux"}
+function loadImg(u,ok,bad){var done=false,tm=setTimeout(function(){if(!done){done=true;bad()}},90000);
+function t2(){var i2=new Image();i2.onload=function(){if(!done){done=true;clearTimeout(tm);ok(i2,true)}};i2.onerror=function(){if(!done){done=true;clearTimeout(tm);bad()}};i2.src=u}
+var i=new Image();i.crossOrigin="anonymous";i.onload=function(){if(!done){done=true;clearTimeout(tm);ok(i,false)}};i.onerror=function(){if(!done)t2()};i.src=u}
+function rs(t){$("br").value=100;$("co").value=100;$("sa").value=100;$("bl").value=0;$("tc").value="#ffffff";$("tx").value=t;$("ts").value=t.length>28?64:t.length>16?84:110;$("ty").value=86}
+
+/* Thumbnail */
+function mk(){var t=$("it").value.trim(),m=$("tm"),b=$("tb");if(!t){$("it").placeholder="Pehle topic likho!";return}
+var p=PL[cur()],d=cap(1280,720,p.w/1280);tv++;thT=t;b.disabled=true;m.textContent="Thumbnail ban raha hai... 20-60 sec lag sakte hain.";
+loadImg(purl("YouTube thumbnail background, 3D render, "+t+", dramatic lighting, glossy, vibrant colors, highly detailed, no text",d[0],d[1]),
+function(i,tn){thTn=tn;img=i;rs(t);finish();m.textContent=tn?"Thumbnail ready! Download na ho to image par long-press karke save karo.":"Thumbnail ready! Edit karo ya Download dabao.";b.disabled=false},
+function(){thTn=false;img=scene(t,1280,720,tv);rs(t);finish();m.textContent="Server abhi busy hai, isliye simple 3D thumbnail bana diya. Thodi der baad dobara try karo.";b.disabled=false})}
+function dl(){var p=PL[cur()],m=$("dlm"),keep=img;if(!img||!thT){m.textContent="Pehle thumbnail banao.";return}
+try{if(img instanceof HTMLCanvasElement)img=scene(thT,p.w,p.h,tv);var o=document.createElement("canvas");o.width=p.w;o.height=p.h;var oc=cx;cx=o.getContext("2d");cx.scale(p.w/1280,p.h/720);draw();cx=oc;img=keep;
+sv2(o,"akdfactvault-thumbnail-"+p.w+"x"+p.h+".png");m.textContent="Download shuru ho gaya ("+p.w+"x"+p.h+")."}
+catch(e){cx=cv.getContext("2d");img=keep;m.textContent="Yahan se direct download nahi ho paya. Neeche image par long-press karke save karo.";finish()}}
+
+/* 3D Image */
+function aiRender(W,H){var o=scene(aiSt.t,W,H,aiSt.v);if(aiSt.t.length<=24){var u=Math.min(W,H*16/9)/1280;ext(o.getContext("2d"),aiSt.t,W/2,H*.9,Math.min(150*u,W*.9/(aiSt.t.length*.55)),"#ffd166")}return o}
+function aiGen(){var t=$("ai").value.trim(),m=$("aim"),b=$("aib");if(!t){m.textContent="Pehle likho kaisi image chahiye.";return}
+var R=$("ar").value,D=R==="1:1"?[1024,1024]:R==="9:16"?[720,1280]:[1280,720],p=PL[cur()],d=cap(D[0],D[1],p.w/1280);
+aiSt={t:t,v:++tv,D:D};aiRem=null;b.disabled=true;m.textContent="Image ban rahi hai... 20-60 sec lag sakte hain.";
+loadImg(purl("3D render, "+t+", glossy, soft studio lighting, highly detailed, vibrant colors, cinematic",d[0],d[1]),
+function(i,tn){aiRem=i;$("aiout").src=i.src;m.textContent=tn?"Image ban gayi! Download na ho to image par long-press karke save karo.":"Image ban gayi! Download karo.";b.disabled=false},
+function(){aiImg=aiRender(D[0],D[1]);$("aiout").src=aiImg.toDataURL("image/png");m.textContent="Server abhi busy hai, isliye simple 3D image bana di. Thodi der baad dobara try karo.";b.disabled=false})}
+function dlAI(){var m=$("aid"),p=PL[cur()];if(!aiSt){m.textContent="Pehle image banao.";return}
+try{if(aiRem){var o=document.createElement("canvas");o.width=aiRem.naturalWidth;o.height=aiRem.naturalHeight;o.getContext("2d").drawImage(aiRem,0,0);sv2(o,"akdfactvault-ai-"+o.width+"x"+o.height+".png")}
+else{var f=p.w/1280,w=Math.round(aiSt.D[0]*f),h=Math.round(aiSt.D[1]*f);sv2(aiRender(w,h),"akdfactvault-3d-"+w+"x"+h+".png")}
+m.textContent="Download shuru ho gaya."}catch(e){m.textContent="Yahan se direct download nahi ho paya. Image par long-press karke save karo."}}
+ru();
+draw();rP();rF();
+var st=0;try{st=+localStorage.getItem("akd_tab")||0}catch(e){}show(st);
+</script></body></html>
